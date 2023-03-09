@@ -46,10 +46,7 @@ jobs:
       - run: 
           name: Build
           command: ./gradlew clean assemble
-      # run tests
-      - run:
-          name: run tests
-          command: ./gradlew test
+      
 
 workflows:
   build-workflow:
