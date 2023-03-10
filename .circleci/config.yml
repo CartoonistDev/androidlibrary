@@ -35,18 +35,7 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
-      - run:
-          name: Install dependencies
-          command: |
-            sudo add-apt-repository ppa:openjdk-r/ppa \
-            sudo apt-get update && sudo apt-get install -y \
-              openjdk-11-jdk \
-              wget \
-              unzip
-            wget https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip
-            unzip -q sdk-tools-linux-4333796.zip -d android-sdk-linux
-            echo y | android-sdk-linux/tools/bin/sdkmanager "platforms;android-29" "build-tools;29.0.3"
-
+      
       - save_cache:
           paths:
             - ~/.gradle
