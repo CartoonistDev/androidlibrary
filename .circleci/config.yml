@@ -10,7 +10,7 @@ jobs:
     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
     docker:
       # specify the version you desire here
-      - image: cimg/android:2023.02
+      - image: circleci/android:api-28-node8-alpha
 
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
@@ -35,7 +35,18 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
-      
+      - run:
+          name: Install dependencies
+          command: |
+            sudo add-apt-repository ppa:openjdk-r/ppa \
+            sudo apt-get update && sudo apt-get install -y \
+              openjdk-11-jdk \
+              wget \
+              unzip
+            wget https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip
+            unzip -q sdk-tools-linux-4333796.zip -d android-sdk-linux
+            echo y | android-sdk-linux/tools/bin/sdkmanager "platforms;android-29" "build-tools;29.0.3"
+
       - save_cache:
           paths:
             - ~/.gradle
