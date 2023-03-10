@@ -17,7 +17,7 @@ jobs:
       # documented at https://circleci.com/docs/2.0/circleci-images/
       # - image: circleci/postgres:9.4
 
-    working_directory: ~/repo
+    working_directory: ~/project
 
     environment:
       # Customize the JVM maximum heap limit
@@ -35,13 +35,28 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
-      - run: gradle dependencies
+      - run:
+          name: Install dependencies
+          command: |
+            sudo add-apt-repository ppa:openjdk-r/ppa \
+            sudo apt-get update && sudo apt-get install -y \
+              openjdk-11-jdk \
+              wget \
+              unzip
+            wget https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip
+            unzip -q sdk-tools-linux-4333796.zip -d android-sdk-linux
+            echo y | android-sdk-linux/tools/bin/sdkmanager "platforms;android-29" "build-tools;29.0.3"
 
       - save_cache:
           paths:
             - ~/.gradle
           key: v1-dependencies-{{ checksum "build.gradle" }}
 
+      - run:
+          name: Install Android Studio
+          command: |
+            wget https://dl.google.com/dl/android/studio/ide-zips/4.1.3.0/android-studio-ide-201.7199119-linux.tar.gz
+            tar -xzf android-studio-ide-201.7199119-linux.tar.gz
       # Build
       - run: 
           name: Build
