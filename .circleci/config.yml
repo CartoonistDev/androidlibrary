@@ -17,7 +17,7 @@ jobs:
       # documented at https://circleci.com/docs/2.0/circleci-images/
       # - image: circleci/postgres:9.4
 
-    working_directory: ~/repo
+    working_directory: ~/project
 
     environment:
       # Customize the JVM maximum heap limit
@@ -34,6 +34,17 @@ jobs:
             - v1-dependencies-{{ checksum "build.gradle" }}
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
+      - run:
+          name: Install Project dependencies
+          command: |
+            sudo add-apt-repository ppa:openjdk-r/ppa \
+            sudo apt-get update && sudo apt-get install -y \
+              openjdk-11-jdk \
+              wget \
+              unzip
+            wget https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip
+            unzip -q sdk-tools-linux-4333796.zip -d android-sdk-linux
+            echo y | android-sdk-linux/tools/bin/sdkmanager "platforms;android-29" "build-tools;29.0.3"
 
       - run:
           name: Set up environment variables
